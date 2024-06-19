@@ -12,4 +12,9 @@ class Account extends Model
     protected $fillable = [
         'account_number',
     ];
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }
