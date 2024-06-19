@@ -13,7 +13,7 @@ class AccountTest extends TestCase
     
     public function testCreateAccount()
     {
-        $account = Account::create();
+        $account = Account::factory()->create();
 
         $this->assertNotNull($account);
 
