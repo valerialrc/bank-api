@@ -27,36 +27,4 @@ class AccountObserver
     {
         $account->account_number = $this->generateAccountNumber();
     }
-
-    /**
-     * Handle the Account "updated" event.
-     */
-    public function updated(Account $account): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Account "deleted" event.
-     */
-    public function deleted(Account $account): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Account "restored" event.
-     */
-    public function restored(Account $account): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Account "force deleted" event.
-     */
-    public function forceDeleted(Account $account): void
-    {
-        //
-    }
 }

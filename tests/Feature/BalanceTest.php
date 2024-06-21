@@ -143,4 +143,45 @@ class BalanceTest extends TestCase
         $convertedBalance = $this->balanceCalculator->convertBalanceToCurrency($account, 'USD');
         $this->assertEquals($convertedBalance, $responseData['balance']);
     }
+
+    public function test_account_balance_selected_currency_is_BRL()
+    {
+        $account = Account::factory()->create();
+
+        Transaction::factory()->create([
+            'account_id' => $account->id,
+            'amount' => 100.00,
+            'currency' => 'USD',
+            'type' => 'deposit',
+        ]);
+
+        Transaction::factory()->create([
+            'account_id' => $account->id,
+            'amount' => 200.00,
+            'currency' => 'BRL',
+            'type' => 'deposit',
+        ]);
+
+        Transaction::factory()->create([
+            'account_id' => $account->id,
+            'amount' => -50.00,
+            'currency' => 'USD',
+            'type' => 'withdrawal',
+        ]);
+
+        $response = $this->get("/api/accounts/{$account->id}/balance?currency=BRL");
+
+        $response->assertStatus(200);
+
+        $response->assertJsonStructure([
+            'currency',
+            'balance',
+        ]);
+
+        $responseData = $response->json();
+        $this->assertEquals('BRL', $responseData['currency']);
+
+        $convertedBalance = $this->balanceCalculator->convertBalanceToCurrency($account, 'BRL');
+        $this->assertEquals($convertedBalance, $responseData['balance']);
+    }
 }
