@@ -17,6 +17,8 @@ class TransactionTest extends TestCase
     /** @test */
     public function it_creates_a_transaction()
     {
+        Account::factory()->create();
+
         $transaction = Transaction::factory()->create();
 
         $this->assertDatabaseHas('transactions', [
@@ -53,6 +55,45 @@ class TransactionTest extends TestCase
             'amount' => $data['amount'],
             'currency' => $data['currency'],
             'type' => 'deposit',
+        ]);
+    }
+
+    public function testWithdrawal()
+    {
+        $account = Account::factory()->create();
+
+        // Primeiro, depositamos um valor para garantir saldo na conta
+        $depositData = [
+            'amount' => $this->faker->randomFloat(2, 10, 1000),
+            'currency' => 'USD',
+        ];
+
+        $this->postJson("/api/accounts/{$account->id}/deposit", $depositData);
+
+        // Dados para o saque
+        $withdrawalData = [
+            'amount' => $this->faker->randomFloat(2, 1, $depositData['amount']), // Valor aleatório entre 1 e o valor depositado
+            'currency' => 'USD',
+        ];
+
+        $response = $this->postJson("/api/accounts/{$account->id}/withdraw", $withdrawalData);
+
+        $response->assertStatus(Response::HTTP_OK);
+
+        $response->assertJson([
+            'success' => true,
+            'transaction' => [
+                'amount' => -$withdrawalData['amount'],
+                'currency' => $withdrawalData['currency'],
+                'type' => 'withdrawal',
+            ],
+        ]);
+
+        $this->assertDatabaseHas('transactions', [
+            'account_id' => $account->id,
+            'amount' => -$withdrawalData['amount'],
+            'currency' => $withdrawalData['currency'],
+            'type' => 'withdrawal',
         ]);
     }
 }
