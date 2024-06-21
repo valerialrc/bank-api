@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Account;
 use App\Services\ExchangeRateService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class AccountController extends Controller
 {
@@ -34,9 +35,9 @@ class AccountController extends Controller
 
     private function convertBalanceToCurrency($account, $targetCurrency)
     {
-        $date = now()->format('m-d-Y');
+        // Usa o dia anterior como fechamento
+        $date = Carbon::now()->subDay()->format('m-d-Y');
 
-        // Saldo total em reais
         $totalBalanceInBRL = 0;
 
         $balances = $account->transactions()
@@ -49,6 +50,7 @@ class AccountController extends Controller
                 $totalBalanceInBRL += $balance->total;
             } else {
                 $exchangeRate = $this->exchangeRateService->getExchangeRate($balance->currency, $date);
+
                 if ($exchangeRate) {
                     $totalBalanceInBRL += $balance->total * $exchangeRate['cotacaoCompra'];
                 }
@@ -58,8 +60,9 @@ class AccountController extends Controller
         if ($targetCurrency === 'BRL') {
             return $totalBalanceInBRL;
         }
-
+    
         $targetExchangeRate = $this->exchangeRateService->getExchangeRate($targetCurrency, $date);
+
         if ($targetExchangeRate) {
             return $totalBalanceInBRL / $targetExchangeRate['cotacaoVenda'];
         }

@@ -17,10 +17,13 @@ class TransactionFactory extends Factory
      */
     public function definition(): array
     {
+        $accountIds = Account::pluck('id')->toArray();
+        $currencies = ['AUD', 'CAD', 'CHF', 'DKK', 'EUR', 'GBP', 'JPY', 'NOK', 'SEK', 'USD'];
+
         return [
             'amount' => $this->faker->randomFloat(2, 1, 10000),
-            'currency' => $this->faker->currencyCode,
-            'account_id' => Account::factory(),
+            'currency' => $this->faker->randomElement($currencies),
+            'account_id' => $this->faker->randomElement($accountIds),
             'type' => $this->faker->randomElement(['deposit', 'withdrawal']),
         ];
     }
