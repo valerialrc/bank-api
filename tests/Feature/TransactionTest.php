@@ -33,7 +33,7 @@ class TransactionTest extends TestCase
         $account = Account::factory()->create();
 
         $data = [
-            'amount' => $this->faker->randomFloat(2, 10, 1000), // Valor aleatório entre 10 e 1000
+            'amount' => $this->faker->randomFloat(2, 10, 1000),
             'currency' => 'USD',
         ];
 
@@ -62,17 +62,15 @@ class TransactionTest extends TestCase
     {
         $account = Account::factory()->create();
 
-        // Primeiro, depositamos um valor para garantir saldo na conta
         $depositData = [
-            'amount' => $this->faker->randomFloat(2, 10, 1000),
+            'amount' => 100,
             'currency' => 'USD',
         ];
 
         $this->postJson("/api/accounts/{$account->id}/deposit", $depositData);
 
-        // Dados para o saque
         $withdrawalData = [
-            'amount' => $this->faker->randomFloat(2, 1, $depositData['amount']), // Valor aleatório entre 1 e o valor depositado
+            'amount' => 50,
             'currency' => 'USD',
         ];
 
