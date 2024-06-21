@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Services\ExchangeRateService;
 
 class TransactionController extends Controller
 {
+    protected $exchangeRateService;
+
+    public function __construct(ExchangeRateService $exchangeRateService)
+    {
+        $this->exchangeRateService = $exchangeRateService;
+    }
     public function deposit(Account $account, Request $request)
     {
         $transaction = $account->transactions()->create([
@@ -37,7 +44,17 @@ class TransactionController extends Controller
 
     private function calculateTotalBalance($account, $currency)
     {
-        // TODO
-        // Implementar a lógica para calcular o saldo total utilizando a API do Banco Central
+        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, now()->format('m-d-Y'));
+        
+        if ($exchangeRate) {
+            $balanceInCurrency = $account->transactions()
+                ->where('currency', $currency)
+                ->sum('amount');
+            
+                $totalBalance = $balanceInCurrency * $exchangeRate['cotacaoVenda'];
+                return $totalBalance;
+        }
+
+        return 0;
     }
 }
