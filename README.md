@@ -1,12 +1,15 @@
 # Projeto API Banco
 
 Este projeto é uma API RESTful desenvolvida em Laravel para simular operações bancárias em diferentes moedas.
+Para fazer a conversão de moedas dentro das operações, foi utilizado o endpoint de boletim de Fechamento PTAX da API do Banco Central.
 
 ## Requisitos
 
 - PHP >= 8.0
+- Laravel
 - Composer
 - MySQL
+- Swagger
 
 ## Configuração
 
@@ -25,7 +28,7 @@ Este projeto é uma API RESTful desenvolvida em Laravel para simular operações
   
 3. **Configurar o ambiente:**
 
-- Copie o arquivo .env.example para .env e configure as variáveis de ambiente necessárias, como conexão com o banco de dados.
+- Copie o arquivo .env.example para .env.
 
 4. **Gerar a chave da aplicação:**
 
@@ -46,6 +49,29 @@ Iniciar o servidor local:
   ```
 Acesse a API em http://localhost:8000.
 
+## Documentação da API com Swagger
+Este projeto utiliza Swagger para a documentação da API. Swagger fornece uma interface amigável para interagir com a API e visualizar os endpoints disponíveis.
+
+Acessando o Swagger UI
+Depois de configurar e executar o projeto, você pode acessar o Swagger UI no seguinte URL:
+
+  ```bash
+    http://localhost:8000/api/documentation
+  ```
+
+Obs:
+1. Certifique-se de estar usando um ID de conta válido para fazer as consultas. Para isso, após executar os seeders, execute o banco de dados:
+  ```bash
+    mysql -u laravel_user -p bank
+  ```
+E realiza a consulta:
+  ```bash
+    SELECT * FROM accounts;
+  ```
+
+2. As moedas válidas são apenas as disponibilizadas pela API do Banco Central:
+
+      AUD, CAD, CHF, DKK, EUR, GBP, JPY, NOK, SEK, USD
 ## Comandos Úteis
 Executar os testes:
 
