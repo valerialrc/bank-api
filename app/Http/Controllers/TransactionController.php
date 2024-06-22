@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Services\ExchangeRateService;
+use Carbon\Carbon;
 
 class TransactionController extends Controller
 {
@@ -44,7 +45,7 @@ class TransactionController extends Controller
 
     private function calculateTotalBalance($account, $currency)
     {
-        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, now()->format('m-d-Y'));
+        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, Carbon::now()->subDay()->format('m-d-Y'));
         
         if ($exchangeRate) {
             $balanceInCurrency = $account->transactions()
