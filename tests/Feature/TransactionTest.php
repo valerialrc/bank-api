@@ -28,7 +28,7 @@ class TransactionTest extends TestCase
         ]);
     }
 
-    public function testDeposit()
+    public function test_deposit()
     {
         $account = Account::factory()->create();
 
@@ -58,7 +58,7 @@ class TransactionTest extends TestCase
         ]);
     }
 
-    public function testWithdrawal()
+    public function test_withdrawal()
     {
         $account = Account::factory()->create();
 

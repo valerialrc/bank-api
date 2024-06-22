@@ -39,22 +39,6 @@ Este projeto é uma API RESTful desenvolvida em Laravel para simular operações
     php artisan migrate --seed
   ```
 
-## Configuração do Xdebug
-
-Para executar testes com cobertura de código, você precisa configurar o Xdebug:
-
-1. Abra o arquivo `php.ini`. O caminho pode variar, mas geralmente é um dos seguintes:
-    ```bash
-    sudo nano /etc/php/8.1/cli/php.ini
-    # ou
-    sudo nano /etc/php/8.1/apache2/php.ini
-    ```
-
-2. Adicione ou modifique a linha para ativar o modo de cobertura do Xdebug:
-    ```ini
-    xdebug.mode=coverage
-    ```
-
 Iniciar o servidor local:
 
   ```bash
@@ -72,7 +56,7 @@ Executar os testes:
 Para gerar um relatório de cobertura de código, use:
 
   ```bash
-    vendor/bin/phpunit --coverage-html coverage
+    XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage
   ```
 
 Abra o arquivo com o relatório de cobertura:

@@ -36,24 +36,19 @@ class TransactionTest extends TestCase
 
     public function test_withdraw_returns_insufficient_funds_when_exchange_rate_null()
     {
-        // Criar uma instância mock de Account e Request
         $account = new Account();
         $request = new Request([
             'amount' => 100.00,
             'currency' => 'USD',
         ]);
 
-        // Mock do ExchangeRateService para retornar null
         $mockExchangeRateService = $this->createMock(ExchangeRateService::class);
         $mockExchangeRateService->method('getExchangeRate')->willReturn(null);
 
-        // Instanciar o TransactionController com o mock do ExchangeRateService
         $controller = new TransactionController($mockExchangeRateService);
 
-        // Chamar o método withdraw
         $response = $controller->withdraw($account, $request);
 
-        // Verificar se a resposta é um JSON com sucesso false e mensagem de funds insuficientes
         $this->assertEquals(400, $response->getStatusCode());
         $this->assertJsonStringEqualsJsonString(
             json_encode(['success' => false, 'message' => 'Insufficient funds']),

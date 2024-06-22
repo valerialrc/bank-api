@@ -11,7 +11,7 @@ class AccountTest extends TestCase
 {
     use RefreshDatabase;
     
-    public function testCreateAccount()
+    public function test_create_account()
     {
         $account = Account::factory()->create();
 
