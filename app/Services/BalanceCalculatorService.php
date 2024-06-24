@@ -16,8 +16,7 @@ class BalanceCalculatorService
     }
     public function convertBalanceToCurrency(Account $account, $targetCurrency)
     {
-        // Usa o dia anterior como fechamento
-        $date = Carbon::now()->subDay()->format('m-d-Y');
+        $date = now()->format('m-d-Y');
 
         $totalBalanceInBRL = 0;
 

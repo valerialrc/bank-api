@@ -42,17 +42,16 @@ Para fazer a conversão de moedas dentro das operações, foi utilizado o endpoi
     php artisan migrate --seed
   ```
 
-Iniciar o servidor local:
+6. Iniciar o servidor local:
 
   ```bash
     php artisan serve
   ```
-Acesse a API em http://localhost:8000.
+7. Acesse a API em http://localhost:8000.
 
 ## Documentação da API com Swagger
 Este projeto utiliza Swagger para a documentação da API. Swagger fornece uma interface amigável para interagir com a API e visualizar os endpoints disponíveis.
 
-Acessando o Swagger UI
 Depois de configurar e executar o projeto, você pode acessar o Swagger UI no seguinte URL:
 
   ```bash
@@ -64,7 +63,7 @@ Obs:
   ```bash
     mysql -u laravel_user -p bank
   ```
-E realiza a consulta:
+  Realize a consulta e escolha um ID:
   ```bash
     SELECT * FROM accounts;
   ```
@@ -72,20 +71,21 @@ E realiza a consulta:
 2. As moedas válidas são apenas as disponibilizadas pela API do Banco Central:
 
       AUD, CAD, CHF, DKK, EUR, GBP, JPY, NOK, SEK, USD
+
 ## Comandos Úteis
-Executar os testes:
+1. Executar os testes:
 
   ```bash
     php artisan test
   ```
 
-Para gerar um relatório de cobertura de código, use:
+2. Para gerar um relatório de cobertura de código, use:
 
   ```bash
     XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage
   ```
 
-Abra o arquivo com o relatório de cobertura:
+3. Abra o arquivo com o relatório de cobertura:
 
  ```bash
     xdg-open coverage/index.html

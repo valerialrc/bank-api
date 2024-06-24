@@ -71,7 +71,7 @@ class AccountController extends Controller
 
         if ($currency) {
             $balance = $this->balanceCalculator->convertBalanceToCurrency($account, $currency);
-            return response()->json(['balance' => $balance, 'currency' => $currency]);
+            return response()->json(['balance' => number_format($balance, 2, '.', ''), 'currency' => $currency]);
         }
 
         $balances = $account->transactions()
@@ -81,6 +81,4 @@ class AccountController extends Controller
 
         return response()->json($balances);
     }
-
-    
 }

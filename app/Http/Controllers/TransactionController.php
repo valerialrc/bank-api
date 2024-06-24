@@ -128,7 +128,7 @@ class TransactionController extends Controller
 
     private function calculateTotalBalance($account, $currency)
     {
-        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, Carbon::now()->subDay()->format('m-d-Y'));
+        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, now()->format('m-d-Y'));        
         
         if ($exchangeRate) {
             $balanceInCurrency = $account->transactions()

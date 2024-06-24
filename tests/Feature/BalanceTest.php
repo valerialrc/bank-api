@@ -141,7 +141,8 @@ class BalanceTest extends TestCase
         $this->assertEquals('USD', $responseData['currency']);
 
         $convertedBalance = $this->balanceCalculator->convertBalanceToCurrency($account, 'USD');
-        $this->assertEquals($convertedBalance, $responseData['balance']);
+        $formattedBalance = number_format($convertedBalance, 2, '.', '');
+        $this->assertEquals($formattedBalance, $responseData['balance']);
     }
 
     public function test_account_balance_selected_currency_is_BRL()
