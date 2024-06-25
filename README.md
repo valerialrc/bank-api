@@ -11,62 +11,86 @@ Para fazer a conversão de moedas dentro das operações, foi utilizado o endpoi
 - MySQL
 - Swagger
 
-## Configuração
+## Configuração no Linux
 
 1. **Clonar o repositório:**
 
-  ```bash
+    ```bash
     git clone git@github.com:valerialrc/bank-api.git
     cd bank-api
-  ```
+    ```
 
 2. **Instalar as dependências do Composer:**
 
-  ```bash
+    ```bash
     composer install
-  ```
+    ```
   
 3. **Configurar o ambiente:**
 
-- Copie o arquivo .env.example para .env.
+- Copie o arquivo .env.example para .env e para .env.testing
 
-4. **Gerar a chave da aplicação:**
+    ```bash
+    cp .env.example .env
+    ```
 
-  ```bash
-    php artisan key:generate
-  ```
+    ```bash
+    cp .env.example .env.testing
+    ```
 
-5. **Executar as migrações do banco de dados:**
+- Configure as variáveis necessárias em ambos arquivos
+  - Sugestões:
+    ```bash
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=bank
+    DB_USERNAME=laravel_user
+    DB_PASSWORD=
+    ```
 
-  ```bash
+    ```bash
+    APP_ENV=testing
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=bank_api_test
+    DB_USERNAME=laravel_user
+    DB_PASSWORD=
+    ```
+
+    - Obs: Será necessário conceder permissão de acesso ao usuário configurado.
+
+4. **Executar as migrações do banco de dados:**
+
+    ```bash
     php artisan migrate --seed
-  ```
+    ```
 
-6. Iniciar o servidor local:
+5. Iniciar o servidor local:
 
-  ```bash
+    ```bash
     php artisan serve
-  ```
-7. Acesse a API em http://localhost:8000.
+    ```
+6. Acesse a API em http://localhost:8000.
 
 ## Documentação da API com Swagger
 Este projeto utiliza Swagger para a documentação da API. Swagger fornece uma interface amigável para interagir com a API e visualizar os endpoints disponíveis.
 
 Depois de configurar e executar o projeto, você pode acessar o Swagger UI no seguinte URL:
 
-  ```bash
     http://localhost:8000/api/documentation
-  ```
+  
 
 Obs:
 1. Certifique-se de estar usando um ID de conta válido para fazer as consultas. Para isso, após executar os seeders, execute o banco de dados:
-  ```bash
+    ```bash
     mysql -u laravel_user -p bank
-  ```
-  Realize a consulta e escolha um ID:
-  ```bash
-    SELECT * FROM accounts;
-  ```
+    ```
+    Realize a consulta e escolha um ID:
+      ```bash
+      SELECT * FROM accounts;
+      ```
 
 2. As moedas válidas são apenas as disponibilizadas pela API do Banco Central:
 
@@ -75,21 +99,21 @@ Obs:
 ## Comandos Úteis
 1. Executar os testes:
 
-  ```bash
+    ```bash
     php artisan test
-  ```
+    ```
 
 2. Para gerar um relatório de cobertura de código, use:
 
-  ```bash
+    ```bash
     XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage
-  ```
+    ```
 
 3. Abra o arquivo com o relatório de cobertura:
 
- ```bash
+    ```bash
     xdg-open coverage/index.html
-  ```
+    ```
 
 ## Rotas da API
 
