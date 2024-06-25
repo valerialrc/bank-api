@@ -19,12 +19,18 @@ class TransactionFactory extends Factory
     {
         $accountIds = Account::pluck('id')->toArray();
         $currencies = ['AUD', 'CAD', 'CHF', 'DKK', 'EUR', 'GBP', 'JPY', 'NOK', 'SEK', 'USD'];
+        $type = $this->faker->randomElement(['deposit', 'withdrawal']);
+        $amount = $this->faker->randomFloat(2, 1, 10000);
+
+        if ($type === 'withdrawal') {
+            $amount = -$amount;
+        }
 
         return [
-            'amount' => $this->faker->randomFloat(2, 1, 10000),
+            'amount' => $amount,
             'currency' => $this->faker->randomElement($currencies),
             'account_id' => $this->faker->randomElement($accountIds),
-            'type' => $this->faker->randomElement(['deposit', 'withdrawal']),
+            'type' => $type,
         ];
     }
 }

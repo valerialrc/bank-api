@@ -5,7 +5,7 @@ namespace Tests\Unit;
 use App\Http\Controllers\TransactionController;
 use App\Models\Transaction;
 use App\Models\Account;
-use App\Services\ExchangeRateService;
+use App\Services\BalanceCalculatorService;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -42,10 +42,10 @@ class TransactionTest extends TestCase
             'currency' => 'USD',
         ]);
 
-        $mockExchangeRateService = $this->createMock(ExchangeRateService::class);
-        $mockExchangeRateService->method('getExchangeRate')->willReturn(null);
+        $mockBalanceCalculatorService = $this->createMock(BalanceCalculatorService::class);
+        $mockBalanceCalculatorService->method('convertBalanceToCurrency')->willReturn(null);
 
-        $controller = new TransactionController($mockExchangeRateService);
+        $controller = new TransactionController($mockBalanceCalculatorService);
 
         $response = $controller->withdraw($account, $request);
 

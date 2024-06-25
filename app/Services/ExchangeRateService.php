@@ -22,7 +22,7 @@ class ExchangeRateService
                     'cotacaoVenda' => $response['value'][0]['cotacaoVenda']
                 ];
             } elseif ($response && empty($response['value'])) {
-                $date = Carbon::parse($date)->subDay()->format('m-d-Y');
+                $date = Carbon::createFromFormat('m-d-Y', $date)->subDay()->format('m-d-Y');
                 $attempts++;
                 continue;
             }

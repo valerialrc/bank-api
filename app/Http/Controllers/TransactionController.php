@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
-use App\Services\ExchangeRateService;
-use Carbon\Carbon;
+use App\Services\BalanceCalculatorService;
 
 /**
  * @OA\Info(
@@ -21,11 +20,12 @@ use Carbon\Carbon;
  */
 class TransactionController extends Controller
 {
-    protected $exchangeRateService;
+    protected $balanceCalculator;
 
-    public function __construct(ExchangeRateService $exchangeRateService)
+
+    public function __construct(BalanceCalculatorService $balanceCalculator)
     {
-        $this->exchangeRateService = $exchangeRateService;
+        $this->balanceCalculator = $balanceCalculator;
     }
 
      /**
@@ -111,7 +111,7 @@ class TransactionController extends Controller
      */
     public function withdraw(Account $account, Request $request)
     {
-        $totalBalance = $this->calculateTotalBalance($account, $request->currency);
+        $totalBalance = $this->balanceCalculator->convertBalanceToCurrency($account, $request->currency);
         
         if ($totalBalance < $request->amount) {
             return response()->json(['success' => false, 'message' => 'Insufficient funds'], 400);
@@ -124,21 +124,5 @@ class TransactionController extends Controller
         ]);
 
         return response()->json(['success' => true, 'transaction' => $transaction]);
-    }
-
-    private function calculateTotalBalance($account, $currency)
-    {
-        $exchangeRate = $this->exchangeRateService->getExchangeRate($currency, now()->format('m-d-Y'));        
-        
-        if ($exchangeRate) {
-            $balanceInCurrency = $account->transactions()
-                ->where('currency', $currency)
-                ->sum('amount');
-            
-                $totalBalance = $balanceInCurrency * $exchangeRate['cotacaoVenda'];
-                return $totalBalance;
-        }
-
-        return 0;
     }
 }
