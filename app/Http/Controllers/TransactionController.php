@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Account;
-use App\Services\BalanceCalculatorService;
 
 /**
  * @OA\Info(
@@ -20,14 +19,6 @@ use App\Services\BalanceCalculatorService;
  */
 class TransactionController extends Controller
 {
-    protected $balanceCalculator;
-
-
-    public function __construct(BalanceCalculatorService $balanceCalculator)
-    {
-        $this->balanceCalculator = $balanceCalculator;
-    }
-
      /**
      * @OA\Post(
      *      path="/api/accounts/{account}/deposit",
@@ -111,17 +102,15 @@ class TransactionController extends Controller
      */
     public function withdraw(Account $account, Request $request)
     {
-        $totalBalance = $this->balanceCalculator->convertBalanceToCurrency($account, $request->currency);
-        
-        if ($totalBalance < $request->amount) {
-            return response()->json(['success' => false, 'message' => 'Insufficient funds'], 400);
-        }
-
         $transaction = $account->transactions()->create([
             'amount' => -$request->amount,
             'currency' => $request->currency,
             'type' => 'withdrawal',
         ]);
+
+        if (!$transaction->save()) {
+            return response()->json(['success' => false, 'message' => 'Insufficient funds'], 400);
+        }
 
         return response()->json(['success' => true, 'transaction' => $transaction]);
     }

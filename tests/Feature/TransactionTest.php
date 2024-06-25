@@ -4,8 +4,10 @@ namespace Tests\Feature;
 
 use App\Models\Account;
 use App\Models\Transaction;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Request;
 use Tests\TestCase;
 use Illuminate\Http\Response;
 
@@ -19,7 +21,7 @@ class TransactionTest extends TestCase
     {
         Account::factory()->create();
 
-        $transaction = Transaction::factory()->create();
+        $transaction = Transaction::factory()->create(['type' => 'deposit']);
 
         $this->assertDatabaseHas('transactions', [
             'id' => $transaction->id,
@@ -93,5 +95,25 @@ class TransactionTest extends TestCase
             'currency' => $withdrawalData['currency'],
             'type' => 'withdrawal',
         ]);
+    }
+
+    public function test_withdraw_returns_insufficient_funds_message()
+    {
+        $account = Account::factory()->create();
+        $request = new Request([
+            'amount' => 100.00,
+            'currency' => 'USD',
+        ]);
+
+        $controller = new TransactionController();
+
+        $response = $controller->withdraw($account, $request);
+
+        $this->assertEquals(400, $response->status());
+
+        $this->assertJsonStringEqualsJsonString(
+            json_encode(['success' => false, 'message' => 'Insufficient funds']),
+            $response->getContent()
+        );
     }
 }

@@ -23,6 +23,7 @@ class TransactionTest extends TestCase
 
         $transaction = Transaction::factory()->create([
             'account_id' => $account->id,
+            'type' => 'deposit',
         ]);
 
         $this->assertDatabaseHas('transactions', [
@@ -34,25 +35,33 @@ class TransactionTest extends TestCase
         $this->assertEquals($account->id, $transaction->account->id);
     }
 
-    public function test_withdraw_returns_insufficient_funds_when_exchange_rate_null()
+    public function test_withdraw_returns_insufficient_funds_when_balance_is_low()
     {
-        $account = new Account();
-        $request = new Request([
-            'amount' => 100.00,
+        $account = Account::factory()->create();
+
+        Transaction::factory()->create([
+            'amount' => 50.00,
             'currency' => 'USD',
+            'type' => 'deposit',
+            'account_id' => $account->id,
         ]);
 
-        $mockBalanceCalculatorService = $this->createMock(BalanceCalculatorService::class);
-        $mockBalanceCalculatorService->method('convertBalanceToCurrency')->willReturn(null);
+        $transaction = new Transaction([
+            'amount' => -100.00,
+            'currency' => 'USD',
+            'type' => 'withdrawal',
+            'account_id' => $account->id,
+        ]);
 
-        $controller = new TransactionController($mockBalanceCalculatorService);
+        $result = $transaction->save();
 
-        $response = $controller->withdraw($account, $request);
+        $this->assertFalse($result);
 
-        $this->assertEquals(400, $response->getStatusCode());
-        $this->assertJsonStringEqualsJsonString(
-            json_encode(['success' => false, 'message' => 'Insufficient funds']),
-            $response->getContent()
-        );
+        $this->assertDatabaseMissing('transactions', [
+            'account_id' => $account->id,
+            'amount' => -100.00,
+            'currency' => 'USD',
+            'type' => 'withdrawal',
+        ]);
     }
 }
